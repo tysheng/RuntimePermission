@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class PermissionFragment extends Fragment {
     private List<String> permissionsList = new ArrayList<>();
 
     @Nullable
-    private WeakReference<PermissionListener> listener;
+    private PermissionListener listener;
 
     public PermissionFragment() {
         setRetainInstance(true);
@@ -67,7 +66,7 @@ public class PermissionFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE && permissions.length > 0 && this.listener != null) {
-            final PermissionListener listener = this.listener.get();
+            final PermissionListener listener = this.listener;
 
             final List<String> acceptedPermissions = new ArrayList<>();
             final List<String> askAgainPermissions = new ArrayList<>();
@@ -100,13 +99,7 @@ public class PermissionFragment extends Fragment {
     }
 
     public PermissionFragment setListener(@Nullable PermissionListener listener) {
-        if (listener != null) {
-            if (this.listener != null) {
-                this.listener.clear();
-            }
-
-            this.listener = new WeakReference<>(listener);
-        }
+        this.listener = listener;
         return this;
     }
 
